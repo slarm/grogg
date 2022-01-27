@@ -1,0 +1,6 @@
+Jan 27 06:25:43 logsource INFO fake multilog
+       line 1
+       line 2
+Jan 27 06:25:44 logsource INFO more lines
+       line 1
+       line 2
