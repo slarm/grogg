@@ -34,5 +34,5 @@ grogg -input=access.log -pattern='%{COMMONAPACHELOG}' -failures -prompt
 ```
 Add additional patterns from file and match multiline events where every new events starts with a date on the format "mmm DD HH:MM:SS":
 ```
-grogg -input=file.log -pattern='%{CUSTOMLOGFILE}' -custom-file=grok-patterns.txt -multiline='^\\w{3}\\s(\\d{2}:){2}\\d{2}'
+grogg -input=file.log -pattern='%{CUSTOMLOGFILE}' -custom-file=grok-patterns.txt -multiline='^\w{3}\s(\d{2}:){2}\d{2}'
 ```
