@@ -25,10 +25,6 @@ func (g *GrokMatcher) IncEvents() {
 	g.Events++
 }
 
-func (g *GrokMatcher) AddResult(s map[string]string) {
-	g.Results = append(g.Results, s)
-}
-
 func Match(s string, gm *GrokMatcher) map[string]string {
 	g, _ := grok.New()
 	if gm.CustomPatterns != "" {
