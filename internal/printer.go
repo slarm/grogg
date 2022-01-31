@@ -3,7 +3,6 @@ package internal
 import (
 	"bufio"
 	"fmt"
-	"os"
 
 	"github.com/pterm/pterm"
 )
@@ -33,15 +32,14 @@ func PrintLogo() {
 	pterm.DefaultBigText.WithLetters(pterm.NewLettersFromString("GROGG")).Render()
 }
 
-func PrintPrompt() bool {
-	scanner := bufio.NewScanner(os.Stdin)
+func PrintPrompt(scanner *bufio.Scanner) bool {
 	fmt.Println("Continue? (y/n)")
 	for scanner.Scan() {
 		if scanner.Text() == "n" {
-			return false
-		} else if scanner.Text() == "y" {
 			break
+		} else if scanner.Text() == "y" {
+			return true
 		}
 	}
-	return true
+	return false
 }

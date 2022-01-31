@@ -2,6 +2,7 @@ package internal
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"regexp"
 	"strings"
@@ -32,31 +33,10 @@ func (m *multiLine) addLine(s string) {
 	m.lines = append(m.lines, s)
 }
 
-func scanMatcher(ml *multiLine, sc *ScanConfig, scanner *bufio.Scanner, mlRegexp *regexp.Regexp, ch chan string) {
-	for scanner.Scan() {
-		if sc.MultiLinePattern != "" {
-			if !mlRegexp.Match([]byte(scanner.Text())) || len(ml.lines) == 0 {
-				ml.addLine(scanner.Text())
-				continue
-			} else {
-				ch <- strings.Join(ml.lines, " ")
-				ml.lines = nil
-				ml.addLine(scanner.Text())
-			}
-		} else {
-			ch <- scanner.Text()
-		}
-	}
-	if len(ml.lines) > 0 {
-		ch <- strings.Join(ml.lines, "\n")
-	}
-	close(ch)
-}
-
-func ScanFile(sc *ScanConfig, gm *GrokMatcher) {
+func ScanFile(sc *ScanConfig, gm *GrokMatcher) error {
 	f, err := os.Open(sc.InputFile)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	defer f.Close()
@@ -70,15 +50,37 @@ func ScanFile(sc *ScanConfig, gm *GrokMatcher) {
 
 	ch := make(chan string)
 
-	go scanMatcher(ml, sc, scanner, mlRegexp, ch)
+	go func() {
+		for scanner.Scan() {
+			if sc.MultiLinePattern != "" {
+				if !mlRegexp.Match([]byte(scanner.Text())) || len(ml.lines) == 0 {
+					ml.addLine(scanner.Text())
+					continue
+				}
+				ch <- strings.Join(ml.lines, "\n")
+				ml.lines = nil
+				ml.addLine(scanner.Text())
+				fmt.Println(ml.lines)
+			} else {
+				ch <- scanner.Text()
+			}
+		}
+		if len(ml.lines) > 0 {
+			ch <- strings.Join(ml.lines, "\n")
+		}
+		close(ch)
+	}()
 
 	for l := range ch {
-		Parse(l, len(ch), gm, sc)
+		err = Parse(l, len(ch), gm, sc)
 		if gm.PromptMode {
-			con := PrintPrompt()
+			in := bufio.NewScanner(os.Stdin)
+			con := PrintPrompt(in)
+			fmt.Println(con)
 			if !con {
 				break
 			}
 		}
 	}
+	return err
 }

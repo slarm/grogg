@@ -48,7 +48,10 @@ func main() {
 	gm.MatchString = *matchString
 	gm.PromptMode = *promptMode
 
-	internal.ScanFile(sc, gm)
+	err := internal.ScanFile(sc, gm)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println("Matched events: " + strconv.Itoa(gm.Events))
 	fmt.Println("Failures: " + strconv.Itoa(gm.Failures))
 
