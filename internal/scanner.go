@@ -33,10 +33,10 @@ func (m *multiLine) addLine(s string) {
 	m.lines = append(m.lines, s)
 }
 
-func ScanFile(sc *ScanConfig, gm *GrokMatcher) {
+func ScanFile(sc *ScanConfig, gm *GrokMatcher) error {
 	f, err := os.Open(sc.InputFile)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	defer f.Close()
@@ -72,7 +72,7 @@ func ScanFile(sc *ScanConfig, gm *GrokMatcher) {
 	}()
 
 	for l := range ch {
-		Parse(l, len(ch), gm, sc)
+		err = Parse(l, len(ch), gm, sc)
 		if gm.PromptMode {
 			in := bufio.NewScanner(os.Stdin)
 			con := PrintPrompt(in)
@@ -82,4 +82,5 @@ func ScanFile(sc *ScanConfig, gm *GrokMatcher) {
 			}
 		}
 	}
+	return err
 }

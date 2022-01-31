@@ -4,9 +4,9 @@ import (
 	"fmt"
 )
 
-func Parse(l string, eof int, gm *GrokMatcher, sc *ScanConfig) {
+func Parse(l string, eof int, gm *GrokMatcher, sc *ScanConfig) error {
 	gm.IncEvents()
-	result := Match(l, gm)
+	result, err := Match(l, gm)
 	if len(result) == 0 {
 		gm.IncFailures()
 		if !sc.SilentMode {
@@ -23,4 +23,5 @@ func Parse(l string, eof int, gm *GrokMatcher, sc *ScanConfig) {
 			fmt.Print("\n")
 		}
 	}
+	return err
 }

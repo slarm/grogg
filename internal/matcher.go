@@ -25,18 +25,16 @@ func (g *GrokMatcher) IncEvents() {
 	g.Events++
 }
 
-func Match(s string, gm *GrokMatcher) map[string]string {
+func Match(s string, gm *GrokMatcher) (map[string]string, error) {
 	g, _ := grok.New()
 	if gm.CustomPatterns != "" {
 		err := g.AddPatternsFromPath(gm.CustomPatterns)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 	}
 
 	values, err := g.Parse(gm.MatchString, s)
-	if err != nil {
-		panic(err)
-	}
-	return values
+
+	return values, err
 }
