@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-var version string = string("0.2")
+var version string = string("0.4")
 
 var bufferTokenSize *int = flag.Int("line-length", 4096, "Set max line length buffer in bytes")
 var customFile *string = flag.String("custom-file", "", "File containing custom Grok patterns")
