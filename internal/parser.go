@@ -10,7 +10,7 @@ func Parse(l string, eof int, gm *GrokMatcher, sc *ScanConfig) error {
 	if len(result) == 0 {
 		gm.IncFailures()
 		if !sc.SilentMode {
-			PrintLine("Grok failure on: " + l)
+			PrintError("Grok failure on: " + l)
 			fmt.Print("\n")
 		}
 	} else {

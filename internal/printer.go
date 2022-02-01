@@ -18,8 +18,12 @@ func PrintResult(m map[string]string) {
 	}
 }
 
-func PrintLine(s string) {
+func PrintError(s string) {
 	pterm.NewRGB(255, 0, 0).Println(s)
+}
+
+func PrintLine(s string) {
+	pterm.NewRGB(255, 255, 0).Println(s)
 }
 
 func PrintSeparator() {
