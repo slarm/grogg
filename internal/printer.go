@@ -27,9 +27,10 @@ func PrintLine(s string) {
 }
 
 func PrintSeparator() {
-	for i := 0; i < pterm.GetTerminalWidth()/2; i++ {
+	for i := 0; i < pterm.GetTerminalWidth()/4; i++ {
 		fmt.Print("-")
 	}
+
 }
 
 func PrintLogo() {
